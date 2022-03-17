@@ -64,6 +64,7 @@ function HookedWalletSubprovider(opts){
   // high level override
   if (opts.processTransaction) self.processTransaction = opts.processTransaction
   if (opts.sendTransaction) self.sendTransaction = opts.sendTransaction
+  if (opts.sign) self.sign = opts.sign
   if (opts.processMessage) self.processMessage = opts.processMessage
   if (opts.processPersonalMessage) self.processPersonalMessage = opts.processPersonalMessage
   if (opts.processTypedMessage) self.processTypedMessage = opts.processTypedMessage
@@ -126,20 +127,10 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'eth_sign':
-      // process normally
-      address = payload.params[0]
-      message = payload.params[1]
-      // non-standard "extraParams" to be appended to our "msgParams" obj
-      // good place for metadata
-      extraParams = payload.params[2] || {}
-      msgParams = extend(extraParams, {
-        from: address,
-        data: message,
+      self.sign(payload.params[0], payload.params[1], function(err, signedMsg){
+        if (err) return end(err, null)
+        end(null, signedMsg)
       })
-      waterfall([
-        (cb) => self.validateMessage(msgParams, cb),
-        (cb) => self.processMessage(msgParams, cb),
-      ], end)
       return
 
     case 'personal_sign':

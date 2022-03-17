@@ -10,3 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Initial commit. ([#1](https://github.com/getsafle/safle-web3-engine/issues/1));
 - Added methods to compose web3 providers using a stack of subproviders each of which handles certain json rpc calls.
+
+## [1.1.0] - 2022-03-16
+
+### Sign function Override
+
+- Override the eth_sign function. ([#1](https://github.com/getsafle/safle-web3-engine/issues/9));
